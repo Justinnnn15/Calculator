@@ -73,47 +73,88 @@ document.addEventListener('DOMContentLoaded', () => {
         const num1 = parseFloat(firstNumber);
         const num2 = parseFloat(secondNumber);
 
-        // Perform calculation based on operator
-        switch (currentOperator) {
-            case '+':
-                result = num1 + num2;
-                break;
-            case '-':
-                result = num1 - num2;
-                break;
-            case '×':
-                result = num1 * num2;
-                break;
-            case '÷':
-                if (num2 === 0) {
-                    display.value = 'Error';
-                    firstNumber = '';
-                    currentOperator = '';
-                    shouldResetDisplay = true;
-                    return;
-                }
-                result = num1 / num2;
-                break;
+        // Check for invalid inputs
+        if (isNaN(num1) || isNaN(num2)) {
+            showError('Invalid input');
+            return;
         }
 
-        // Round the result to avoid floating point issues
-        result = Math.round(result * 1000000) / 1000000;
-        
-        // Display the result
-        display.value = result;
+        // Perform calculation based on operator
+        try {
+            switch (currentOperator) {
+                case '+':
+                    result = num1 + num2;
+                    break;
+                case '-':
+                    result = num1 - num2;
+                    break;
+                case '×':
+                    result = num1 * num2;
+                    break;
+                case '÷':
+                    if (num2 === 0) {
+                        showError('Cannot divide by zero');
+                        return;
+                    }
+                    result = num1 / num2;
+                    break;
+                default:
+                    showError('Invalid operator');
+                    return;
+            }
 
-        // Reset for next calculation
+            // Check if result is too large or infinite
+            if (!isFinite(result)) {
+                showError('Result too large');
+                return;
+            }
+
+            // Round the result to avoid floating point issues
+            result = parseFloat(result.toFixed(8));
+            
+            // Display the result
+            display.value = result;
+
+            // Reset for next calculation
+            firstNumber = '';
+            currentOperator = '';
+            shouldResetDisplay = true;
+        } catch (error) {
+            showError('Calculation error');
+        }
+    }
+
+    function showError(message) {
+        display.value = message;
+        display.classList.add('error');
         firstNumber = '';
         currentOperator = '';
         shouldResetDisplay = true;
+        
+        // Remove error class after 1.5 seconds
+        setTimeout(() => {
+            display.classList.remove('error');
+            if (display.value === message) {
+                display.value = '';
+            }
+        }, 1500);
     }
 
     function clearCalculator() {
+        // Clear all variables
         display.value = '';
         firstNumber = '';
         currentOperator = '';
         secondNumber = '';
         shouldResetDisplay = false;
+        
+        // Remove any error styling
+        display.classList.remove('error');
+        
+        // Remove any button highlighting
+        buttons.forEach(button => {
+            button.classList.remove('active');
+        });
     }
 
     // Add keyboard support
