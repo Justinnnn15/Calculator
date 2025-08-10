@@ -98,11 +98,11 @@ button:active {
     background-color: #27ae60;
 }
 
-.clear {
+.clear, .erase {
     background-color: #e74c3c;
 }
 
-.clear:hover {
+.clear:hover, .erase:hover {
     background-color: #c0392b;
 }
 
