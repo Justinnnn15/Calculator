@@ -73,9 +73,29 @@ button {
     cursor: pointer;
     color: white;
     min-height: 65px;
-    transition: all 0.2s ease;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     font-weight: 500;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    position: relative;
+    overflow: hidden;
+}
+
+button::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    transition: transform 0.5s ease-out;
+}
+
+button:active::after {
+    transform: translate(-50%, -50%) scale(2);
+    transition: transform 0.2s ease-out;
 }
 
 button:hover {
@@ -90,6 +110,7 @@ button:active {
 
 .number {
     background-color: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(5px);
 }
 
 .number:hover {
@@ -98,6 +119,7 @@ button:active {
 
 .operator {
     background-color: #f39c12;
+    font-weight: 600;
 }
 
 .operator:hover {
@@ -106,6 +128,7 @@ button:active {
 
 .equals {
     background-color: #2ecc71;
+    font-weight: 600;
 }
 
 .equals:hover {
@@ -114,6 +137,7 @@ button:active {
 
 .clear, .erase {
     background-color: #e74c3c;
+    font-weight: 600;
 }
 
 .clear:hover, .erase:hover {
@@ -124,10 +148,21 @@ button:active {
     grid-column: span 2;
 }
 
+.double-zero, .triple-zero {
+    font-size: 20px;
+}
+
+/* Bottom row styling */
+.zero, .double-zero, .triple-zero {
+    margin-bottom: 0;
+}
+
 /* Responsive design for smaller screens */
 @media (max-width: 480px) {
     .calculator {
         padding: 15px;
+        max-width: 100%;
+        margin: 10px;
     }
 
     .display {
@@ -135,37 +170,58 @@ button:active {
     }
 
     #result {
-        height: 60px;
+        height: 70px;
         font-size: 28px;
+        padding: 15px;
+    }
+
+    .buttons {
+        gap: 10px;
+    }
+
+    button {
+        padding: 0;
+        font-size: 22px;
+        min-height: 60px;
+        border-radius: 15px;
+        touch-action: manipulation;
+    }
+}
+
+/* Extra small devices */
+@media (max-width: 360px) {
+    .calculator {
+        padding: 10px;
+    }
+
+    .display {
+        margin-bottom: 10px;
+    }
+
+    button {
+        font-size: 20px;
+        min-height: 50px;
+        border-radius: 12px;
+    }
+
+    #result {
+        height: 60px;
+        font-size: 24px;
         padding: 10px;
     }
 
     .buttons {
         gap: 8px;
     }
-
-    button {
-        padding: 15px;
-        font-size: 20px;
-        min-height: 55px;
-        border-radius: 10px;
-    }
 }
 
-/* Extra small devices */
-@media (max-width: 320px) {
-    .calculator {
-        padding: 12px;
-    }
+/* Button press animation */
+@keyframes buttonPress {
+    0% { transform: scale(1); }
+    50% { transform: scale(0.95); }
+    100% { transform: scale(1); }
+}
 
-    button {
-        padding: 12px;
-        font-size: 18px;
-        min-height: 45px;
-    }
-
-    #result {
-        height: 50px;
-        font-size: 24px;
-    }
+.button-press {
+    animation: buttonPress 0.15s ease-in-out;
 }

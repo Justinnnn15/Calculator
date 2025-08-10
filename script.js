@@ -10,6 +10,12 @@ document.addEventListener('DOMContentLoaded', () => {
     // Add click event listeners to all buttons
     buttons.forEach(button => {
         button.addEventListener('click', () => {
+            // Add button press animation
+            button.classList.add('button-press');
+            setTimeout(() => {
+                button.classList.remove('button-press');
+            }, 150);
+
             const value = button.textContent;
 
             // Handle number input
